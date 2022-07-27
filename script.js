@@ -2,7 +2,6 @@
 const calcScreenTop = document.querySelector("calc-screen-top");
 const calcScreenBottom = document.querySelector("calc-screen-bottom");
 
-
 const BTN_TAGNAME = {
     clearAll: "btn-clear-all",
     clear: "btn-clear",
@@ -41,11 +40,9 @@ const handleBtnClick = (event) => {
         case "+":
         case "-":
         case "%":
-            if (btn.textContent == "%"){
-                str = "/";              
-            } else {
-                const lastScreenBottomChar = getLastChar(calcScreenBottom.textContent);
-                str = ["×", "+", "-", "/"].includes(lastScreenBottomChar) ? "" : btn.textContent;
+            const lastScreenBottomChar = getLastChar(calcScreenBottom.textContent);
+            if (!["×", "+", "-", "/"].includes(lastScreenBottomChar)){
+                str = btn.textContent == "%" ? "/" :  btn.textContent;
             }
             break;
         case "AC":
