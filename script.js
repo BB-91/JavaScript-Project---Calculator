@@ -1,6 +1,10 @@
-const calcScreen = document.querySelector("calc-screen");
+// const calcScreen = document.querySelector("calc-screen");
+const calcScreenTop = document.querySelector("calc-screen-top");
+const calcScreenBottom = document.querySelector("calc-screen-bottom");
+
 
 const BTN_TAGNAME = {
+    clearAll: "btn-clear-all",
     clear: "btn-clear",
     divide: "btn-divide",
     multiply: "btn-multiply",
@@ -33,32 +37,38 @@ const handleBtnClick = (event) => {
     // console.log(`clicked btn with id: ${btn.id}`);
     let str = "";
     switch (btn.textContent){
-        case "%":
-            str = "/";
-            break;
         case "×":
         case "+":
         case "-":
-            const lastScreenChar = getLastChar(calcScreen.textContent);
-            str = ["×", "+", "-", "="].includes(lastScreenChar) ? "" : btn.textContent;
+        case "%":
+            if (btn.textContent == "%"){
+                str = "/";              
+            } else {
+                const lastScreenBottomChar = getLastChar(calcScreenBottom.textContent);
+                str = ["×", "+", "-", "/"].includes(lastScreenBottomChar) ? "" : btn.textContent;
+            }
             break;
         case "AC":
-            calcScreen.textContent = "";
+            calcScreenTop.textContent = "";
+            calcScreenBottom.textContent = "";
+            break;
+        case "C":
+            calcScreenBottom.textContent = "";
             break;
         case ".":
-            str = calcScreen.textContent.includes(".") ? "" : "."
+            str = calcScreenBottom.textContent.includes(".") ? "" : "."
             break;
         case "=":
             // TODO: CALCULATE AND UPDATE SCREEN
             console.log("TODO: CALCULATE AND UPDATE SCREEN")
-            calcScreen.textContent = "";
+            calcScreenBottom.textContent = "";
             break;
         default:
             str = btn.textContent;
     }
 
 
-    calcScreen.textContent += str;
+    calcScreenBottom.textContent += str;
 }
 
 Object.values(BTN_TAGNAME).forEach(btnTagName => {

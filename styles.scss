@@ -14,11 +14,28 @@ calc-frame {
 }
 
 calc-screen {
-    display: inline-block;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
     width: 100%;
     height: clamp(0px,15vw, 120px);
     background-color: rgb(128, 128, 128, 0.4);
     text-align: right;
+}
+
+// calc-screen {
+//     display: inline-block;
+//     width: 100%;
+//     height: clamp(0px,15vw, 120px);
+//     background-color: rgb(128, 128, 128, 0.4);
+//     text-align: right;
+// }
+
+calc-screen-top,
+calc-screen-bottom {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
 btn-grid {
@@ -32,7 +49,7 @@ btn-grid {
     align-items: center;
 
     grid-template-areas:
-    "btn-clear      btn-clear       btn-divide      btn-multiply"
+    "btn-clear-all  btn-clear       btn-divide      btn-multiply"
     "btn-7          btn-8           btn-9           btn-subtract"
     "btn-4          btn-5           btn-6           btn-add"
     "btn-1          btn-2           btn-3           btn-sum"
@@ -46,6 +63,7 @@ calc-btn {
     padding: 5px 0;
 }
 
+#btn-clear-all {grid-area: btn-clear-all;}
 #btn-clear {grid-area: btn-clear;}
 #btn-divide {grid-area: btn-divide;}
 #btn-multiply {grid-area: btn-multiply;}
