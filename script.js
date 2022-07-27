@@ -1,3 +1,5 @@
+const calcScreen = document.querySelector("calc-screen");
+
 const BTN_TAGNAME = {
     clear: "btn-clear",
     divide: "btn-divide",
@@ -19,8 +21,25 @@ const BTN_TAGNAME = {
 }
 
 const handleBtnClick = (event) => {
-    const element = event.target;
-    console.log(`clicked btn with id: ${element.id}`)
+    const btn = event.target;
+    console.log(`clicked btn with id: ${btn.id}`);
+    let str = "";
+    switch (btn.textContent){
+        case "%":
+            str = "/";
+            break;
+        case "AC":
+            calcScreen.textContent = "";
+            break;
+        case ".":
+            str = calcScreen.textContent.includes(".") ? "" : "."
+            break;
+        default:
+            str = btn.textContent;
+    }
+
+
+    calcScreen.textContent += str;
 }
 
 Object.values(BTN_TAGNAME).forEach(btnTagName => {
