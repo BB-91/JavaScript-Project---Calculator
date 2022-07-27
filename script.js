@@ -40,9 +40,15 @@ const handleBtnClick = (event) => {
         case "+":
         case "-":
         case "%":
-            const lastScreenBottomChar = getLastChar(calcScreenBottom.textContent);
-            if (!["×", "+", "-", "/"].includes(lastScreenBottomChar)){
-                str = btn.textContent == "%" ? "/" :  btn.textContent;
+            const lastScreenTopChar = getLastChar(calcScreenTop.textContent.trim());
+            const top = calcScreenTop.textContent;
+            const bottom = calcScreenBottom.textContent;
+
+            if (bottom || !["×", "+", "-", "/"].includes(lastScreenTopChar)){
+                const char = btn.textContent == "%" ? "/" :  btn.textContent;
+                calcScreenTop.textContent += `${bottom} ${char} `
+                calcScreenBottom.textContent = ""
+                // str = btn.textContent == "%" ? "/" :  btn.textContent;
             }
             break;
         case "AC":
