@@ -20,19 +20,38 @@ const BTN_TAGNAME = {
     9: "btn-9",
 }
 
+const getLastChar = (str) => {
+    if (typeof str != "string"){
+        throw new Error(`Not a string: ${str}`)
+    } else {
+        return str.charAt(str.length - 1);
+    }
+}
+
 const handleBtnClick = (event) => {
     const btn = event.target;
-    console.log(`clicked btn with id: ${btn.id}`);
+    // console.log(`clicked btn with id: ${btn.id}`);
     let str = "";
     switch (btn.textContent){
         case "%":
             str = "/";
+            break;
+        case "×":
+        case "+":
+        case "-":
+            const lastScreenChar = getLastChar(calcScreen.textContent);
+            str = ["×", "+", "-", "="].includes(lastScreenChar) ? "" : btn.textContent;
             break;
         case "AC":
             calcScreen.textContent = "";
             break;
         case ".":
             str = calcScreen.textContent.includes(".") ? "" : "."
+            break;
+        case "=":
+            // TODO: CALCULATE AND UPDATE SCREEN
+            console.log("TODO: CALCULATE AND UPDATE SCREEN")
+            calcScreen.textContent = "";
             break;
         default:
             str = btn.textContent;
