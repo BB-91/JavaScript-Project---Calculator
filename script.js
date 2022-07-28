@@ -1,8 +1,6 @@
-// const calcScreen = document.querySelector("calc-screen");
 const calcScreenTop = document.querySelector("calc-screen-top");
 const calcScreenBottom = document.querySelector("calc-screen-bottom");
 const BtnTextObj = {} // { btnText : btn } initialized when asigning btn click handlers
-const numPadRegex = /[0-9\/\*\-\+\.]/;
 
 const BTN_TAGNAME = {
     clearAll: "btn-clear-all",
@@ -90,8 +88,8 @@ const handleBtnClick = (event) => {
 }
 
 const getBtnOrNullFromNumpadEvent = (event) => {
-    if (numPadRegex.test(event.key)){
-        const btnText = event.key.replace("/", "%").replace("*", "×");
+    if ( /([0-9\/\*\-\+\.]|Enter)/.test(event.key)){
+        const btnText = event.key.replace("/", "%").replace("*", "×").replace("Enter", "=");
         const btn = BtnTextObj[btnText];
         return btn;
     }
@@ -105,6 +103,7 @@ window.addEventListener("keyup", () => {
 })
 
 window.addEventListener("keydown", () => {
+    console.log(event.key)
     const btn = getBtnOrNullFromNumpadEvent(event);
     if (btn && !event.repeat) { // fire once
         processBtnPress(btn, true);
