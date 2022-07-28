@@ -35,21 +35,19 @@ const getLastTop = () => {
     return getLastChar(calcScreenTop.textContent.trim());
 }
 
-const handleBtnClick = (event) => {
-    const btn = event.target;
-    // console.log(`clicked btn with id: ${btn.id}`);
+const processBtnPress = (btnTextContent) => {
     let str = "";
-    const top = calcScreenTop.textContent;
-    const bottom = calcScreenBottom.textContent;
+    const topText = calcScreenTop.textContent;
+    const bottomText = calcScreenBottom.textContent;
     const topLast = getLastTop();
-    switch (btn.textContent){
+    switch (btnTextContent){
         case "×":
         case "+":
         case "-":
         case "%":
-            if (bottom || !["×", "+", "-", "/"].includes(topLast)){
-                const char = btn.textContent == "%" ? "/" :  btn.textContent;
-                calcScreenTop.textContent += `${bottom} ${char} `
+            if (bottomText || !["×", "+", "-", "/"].includes(topLast)){
+                const char = btnTextContent == "%" ? "/" :  btnTextContent;
+                calcScreenTop.textContent += `${bottomText} ${char} `
                 calcScreenBottom.textContent = ""
             }
             break;
@@ -69,17 +67,28 @@ const handleBtnClick = (event) => {
             calcScreenBottom.textContent = "";
             break;
         case "0":
-            str = bottom ? "0" : "";
+            str = bottomText ? "0" : "";
             break;
         default:
-            str = btn.textContent;
+            str = btnTextContent;
     }
 
-
     calcScreenBottom.textContent += str;
+}
+
+const handleBtnClick = (event) => {
+    const btn = event.target;
+    processBtnPress(btn.textContent);
 }
 
 Object.values(BTN_TAGNAME).forEach(btnTagName => {
     const element = document.querySelector("#" + btnTagName);
     element.addEventListener("click", handleBtnClick)
+})
+
+
+window.addEventListener("keyup", () => {
+    if (/[0-9\/\*\-\+\.]/.test(event.key)){
+        processBtnPress(event.key.replace("/", "%").replace("*", "×"))
+    }
 })
