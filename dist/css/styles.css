@@ -81,9 +81,11 @@ calc-btn {
   height: 100%;
 }
 
-calc-btn:active {
+calc-btn:active,
+calc-btn.simulated-click {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 4px black;
+  filter: brightness(80%);
 }
 
 #btn-clear-all {

@@ -1,6 +1,8 @@
 // const calcScreen = document.querySelector("calc-screen");
 const calcScreenTop = document.querySelector("calc-screen-top");
 const calcScreenBottom = document.querySelector("calc-screen-bottom");
+const BtnTextObj = {} // { btnText : btn } initialized when asigning btn click handlers
+const numPadRegex = /[0-9\/\*\-\+\.]/;
 
 const BTN_TAGNAME = {
     clearAll: "btn-clear-all",
@@ -35,8 +37,14 @@ const getLastTop = () => {
     return getLastChar(calcScreenTop.textContent.trim());
 }
 
-const processBtnPress = (btnTextContent) => {
+const processBtnPress = (btn, simulated) => {
     let str = "";
+
+    if (simulated) {
+        btn.classList.add("simulated-click");
+    }
+
+    const btnTextContent = btn.textContent;
     const topText = calcScreenTop.textContent;
     const bottomText = calcScreenBottom.textContent;
     const topLast = getLastTop();
@@ -78,17 +86,33 @@ const processBtnPress = (btnTextContent) => {
 
 const handleBtnClick = (event) => {
     const btn = event.target;
-    processBtnPress(btn.textContent);
+    processBtnPress(btn, false);
 }
 
-Object.values(BTN_TAGNAME).forEach(btnTagName => {
-    const element = document.querySelector("#" + btnTagName);
-    element.addEventListener("click", handleBtnClick)
-})
-
+const getBtnOrNullFromNumpadEvent = (event) => {
+    if (numPadRegex.test(event.key)){
+        const btnText = event.key.replace("/", "%").replace("*", "×");
+        const btn = BtnTextObj[btnText];
+        return btn;
+    }
+}
 
 window.addEventListener("keyup", () => {
-    if (/[0-9\/\*\-\+\.]/.test(event.key)){
-        processBtnPress(event.key.replace("/", "%").replace("*", "×"))
+    const btn = getBtnOrNullFromNumpadEvent(event);
+    if (btn) {
+        btn.classList.remove("simulated-click");
     }
+})
+
+window.addEventListener("keydown", () => {
+    const btn = getBtnOrNullFromNumpadEvent(event);
+    if (btn && !event.repeat) { // fire once
+        processBtnPress(btn, true);
+    }
+})
+
+Object.values(BTN_TAGNAME).forEach(btnTagName => {
+    const btn = document.querySelector("#" + btnTagName);
+    BtnTextObj[btn.textContent] = btn;
+    btn.addEventListener("click", handleBtnClick)
 })
