@@ -41,19 +41,16 @@ const handleBtnClick = (event) => {
     let str = "";
     const top = calcScreenTop.textContent;
     const bottom = calcScreenBottom.textContent;
+    const topLast = getLastTop();
     switch (btn.textContent){
         case "×":
         case "+":
         case "-":
         case "%":
-            const lastScreenTopChar = getLastTop();
-
-
-            if (bottom || !["×", "+", "-", "/"].includes(lastScreenTopChar)){
+            if (bottom || !["×", "+", "-", "/"].includes(topLast)){
                 const char = btn.textContent == "%" ? "/" :  btn.textContent;
                 calcScreenTop.textContent += `${bottom} ${char} `
                 calcScreenBottom.textContent = ""
-                // str = btn.textContent == "%" ? "/" :  btn.textContent;
             }
             break;
         case "AC":
