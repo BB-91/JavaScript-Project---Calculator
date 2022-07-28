@@ -53,7 +53,7 @@ const processBtnPress = (btn, simulated) => {
         case "+":
         case "-":
         case "%":
-            if (bottomText || !["×", "+", "-", "/"].includes(topLast)){
+            if (bottomText || (topText && !["×", "+", "-", "/"].includes(topLast))){
                 const char = btnTextContent == "%" ? "/" :  btnTextContent;
                 calcScreenTop.textContent += `${bottomText} ${char} `
                 calcScreenBottom.textContent = ""
