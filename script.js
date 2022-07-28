@@ -31,6 +31,10 @@ const getLastChar = (str) => {
     }
 }
 
+const getLastTop = () => {
+    return getLastChar(calcScreenTop.textContent.trim());
+}
+
 const handleBtnClick = (event) => {
     const btn = event.target;
     // console.log(`clicked btn with id: ${btn.id}`);
@@ -42,7 +46,7 @@ const handleBtnClick = (event) => {
         case "+":
         case "-":
         case "%":
-            const lastScreenTopChar = getLastChar(calcScreenTop.textContent.trim());
+            const lastScreenTopChar = getLastTop();
 
 
             if (bottom || !["×", "+", "-", "/"].includes(lastScreenTopChar)){
