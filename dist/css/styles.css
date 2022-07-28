@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-size: 24px;
+  font-size: clamp(12px, 6vw, 32px);
   font-family: sans-serif;
   font-weight: bold;
 }
@@ -23,12 +23,10 @@
 }
 
 calc-frame {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 20% auto;
-  row-gap: 12px;
+  display: flex;
+  flex-direction: column;
   width: clamp(274px, 80vw, 500px);
-  height: clamp(0px, 90vw, 60vh);
+  height: clamp(280px, 90vw, 80vh);
   background-color: var(--color1);
   margin: 0 auto;
   padding: 10px;
@@ -42,7 +40,7 @@ calc-screen {
   grid-template-columns: 1fr;
   grid-template-rows: repeat(2, 1fr);
   width: 100%;
-  height: 100%;
+  height: clamp(60px, 100%, 140px);
   background-color: var(--color3);
   text-align: right;
   box-shadow: 2px 2px 2px black inset, -1px -1px 5px black inset;
@@ -53,11 +51,15 @@ calc-screen-bottom {
   display: block;
   width: 100%;
   height: 100%;
+  padding: 4px;
+  text-overflow: clip;
+  overflow: hidden;
 }
 
 btn-grid {
+  padding-top: 8px;
   width: 100%;
-  height: 60%;
+  height: 100%;
   text-align: center;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -76,6 +78,7 @@ calc-btn {
   border: 1px solid black;
   border-radius: 2px;
   text-shadow: var(--text-shadow);
+  height: 100%;
 }
 
 calc-btn:active {
