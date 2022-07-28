@@ -35,14 +35,15 @@ const handleBtnClick = (event) => {
     const btn = event.target;
     // console.log(`clicked btn with id: ${btn.id}`);
     let str = "";
+    const top = calcScreenTop.textContent;
+    const bottom = calcScreenBottom.textContent;
     switch (btn.textContent){
         case "×":
         case "+":
         case "-":
         case "%":
             const lastScreenTopChar = getLastChar(calcScreenTop.textContent.trim());
-            const top = calcScreenTop.textContent;
-            const bottom = calcScreenBottom.textContent;
+
 
             if (bottom || !["×", "+", "-", "/"].includes(lastScreenTopChar)){
                 const char = btn.textContent == "%" ? "/" :  btn.textContent;
@@ -65,6 +66,9 @@ const handleBtnClick = (event) => {
             // TODO: CALCULATE AND UPDATE SCREEN
             console.log("TODO: CALCULATE AND UPDATE SCREEN")
             calcScreenBottom.textContent = "";
+            break;
+        case "0":
+            str = bottom ? "0" : "";
             break;
         default:
             str = btn.textContent;
