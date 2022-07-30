@@ -67,14 +67,19 @@ btn-grid {
     text-align: center;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    // grid-template-rows: repeat(5, 1fr);
     gap: 5px;
     align-items: center;
     grid-template-areas:
-    "btn-clear-all  btn-clear       btn-divide      btn-multiply"
-    "btn-7          btn-8           btn-9           btn-subtract"
-    "btn-4          btn-5           btn-6           btn-add"
-    "btn-1          btn-2           btn-3           btn-sum"
+    "btn-min        btn-max         btn-abs         btn-neg"
+    "btn-ceil       btn-floor       btn-round       btn-trunc"
+    "btn-sqrt       btn-cbrt        btn-pow         btn-fact"
+    "btn-sin        btn-cos         btn-tan         btn-func"
+    "btn-log        btn-sign        btn-open        btn-close"
+    "btn-clear-all  btn-clear       btn-back        btn-divide"
+    "btn-7          btn-8           btn-9           btn-multiply"
+    "btn-4          btn-5           btn-6           btn-subtract"
+    "btn-1          btn-2           btn-3           btn-add"
     "btn-0          btn-0           btn-decimal     btn-sum"
     ;
 }
@@ -98,25 +103,18 @@ calc-btn.simulated-click {
     filter: brightness(80%);
 }
 
-#btn-clear-all {grid-area: btn-clear-all;}
-#btn-clear {grid-area: btn-clear;}
-#btn-divide {grid-area: btn-divide;}
-#btn-multiply {grid-area: btn-multiply;}
+$btn-suffixes: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'min', 'max', 'abs', 'neg', 'clear-all', 'clear', 'back',
+                'divide', 'multiply', 'subtract', 'add', 'sum', 'decimal',
+                'ceil', 'floor', 'round', 'trunc',
+                'sqrt', 'cbrt', 'pow', 'fact',
+                'sin', 'cos', 'tan', 'func',
+                'ain', 'acos', 'atan',
+                'sign', 'log', 'open', 'close',
+                ;
 
-#btn-7 {grid-area: btn-7;}
-#btn-8 {grid-area: btn-8;}
-#btn-9 {grid-area: btn-9;}
-#btn-subtract {grid-area: btn-subtract;}
-
-#btn-4 {grid-area: btn-4;}
-#btn-5 {grid-area: btn-5;}
-#btn-6 {grid-area: btn-6;}
-#btn-add {grid-area: btn-add;}
-
-#btn-1 {grid-area: btn-1;}
-#btn-2 {grid-area: btn-2;}
-#btn-3 {grid-area: btn-3;}
-#btn-sum {grid-area: btn-sum;}
-
-#btn-0 {grid-area: btn-0;}
-#btn-decimal {grid-area: btn-decimal;}
+@each $suffix in $btn-suffixes {
+    #btn-#{$suffix} {
+        grid-area: btn-#{$suffix};
+    }
+}
