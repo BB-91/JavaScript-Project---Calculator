@@ -1,3 +1,5 @@
+import * as Algorithm from './lib/algorithm.js';
+
 const calcScreenTop = document.querySelector("calc-screen-top");
 const calcScreenBottom = document.querySelector("calc-screen-bottom");
 const BtnTextObj = {} // { btnText : btn } initialized when asigning btn click handlers
@@ -103,7 +105,7 @@ window.addEventListener("keyup", () => {
 })
 
 window.addEventListener("keydown", () => {
-    console.log(event.key)
+    console.log(`event.key: ${event.key}`)
     const btn = getBtnOrNullFromNumpadEvent(event);
     if (btn && !event.repeat) { // fire once
         processBtnPress(btn, true);
