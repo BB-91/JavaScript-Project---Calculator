@@ -117,3 +117,8 @@ Object.values(BTN_TAGNAME).forEach(btnTagName => {
     BtnTextObj[btn.textContent] = btn;
     btn.addEventListener("click", handleBtnClick)
 })
+
+const DEBUG_STR = "2 * 4 + 3 - .3-4. - 5 - -3 ^ abs(---------5)"
+console.log(DEBUG_STR)
+const DEBUG_ANSWER = Algorithm.calc(DEBUG_STR);
+console.log(`DEBUG_ANSWER: ${DEBUG_ANSWER}`);
