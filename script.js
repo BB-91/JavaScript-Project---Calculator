@@ -145,7 +145,6 @@ const processBtnPress = (btn, simulated) => {
     const btnTextContent = btn.textContent;
     const topText = calcScreenTop.textContent;
     const bottomText = calcScreenBottom.textContent;
-    // const topLast = getLastTop();
 
     if (btn.textContent == "(") {
         negationInsertionStr = "(";
@@ -192,7 +191,6 @@ const processBtnPress = (btn, simulated) => {
         case "-":
         case "×":
         case "/":
-            // if (!_isAwaitingRightOperand) {
             if (!_isAwaitingRightOperand && !_isAwaitingContentInParentheses) {
                 str = btnTextContent;
                 setIsAwaitingRightOperand(true);
