@@ -23,13 +23,21 @@
         0px 1px 1px black;
 }
 
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 calc-frame {
     display: flex;
     flex-direction: column;
     width: clamp(274px, 80vw, 500px);
     height: auto;
     background-color: var(--color1);
-    margin: 0 auto;
+    margin: auto auto;
     padding: 10px;
     border: 2px solid black;
     border-radius: 10px;
