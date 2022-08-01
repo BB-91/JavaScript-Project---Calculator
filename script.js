@@ -5,6 +5,14 @@ const calcScreenBottom = document.querySelector("calc-screen-bottom");
 let negationInsertionStr = "";
 let lastAnswer = "";
 
+let openingParenthesesCount = 0;
+let closingParenthesesCount = 0;
+
+const updateParenthesesCounts = () => {
+    openingParenthesesCount = Algorithm.strCount(calcScreenBottom.textContent + calcScreenTop.textContent, "(");
+    closingParenthesesCount = Algorithm.strCount(calcScreenBottom.textContent + calcScreenTop, ")");
+}
+
 let currentBtnLayerIndex = 0;
 let layeredBtns = [ // assigned in setup()
     // sinBtn
@@ -114,24 +122,37 @@ const processBtnPress = (btn, simulated) => {
     const displayOperators = ["*", "+", "-", "/"];
 
     switch (btnTextContent){
+        case "(":
+            str = "(";
+            break;
+        case ")":
+            if (openingParenthesesCount > closingParenthesesCount) {
+                str = ")";
+            }
+            break;
         case "+":
         case "-":
         case "×":
         case "/":
-            if (bottomText || (topText && !displayOperators.includes(topLast))){
-                const char = btnTextContent;
 
-                if (bottomText && !displayOperators.includes(topLast)) {
-                    calcScreenTop.textContent = "";
+            if (openingParenthesesCount > closingParenthesesCount) {
+                str = btnTextContent;
+            } else {
+                if (bottomText || (topText && !displayOperators.includes(topLast))){
+                    const char = btnTextContent;
+    
+                    if (bottomText && !displayOperators.includes(topLast)) {
+                        calcScreenTop.textContent = "";
+                    }
+    
+                    try {
+                        calcScreenTop.textContent += Algorithm.getFormattedEquationStr(`${bottomText} ${char} `)
+                    } catch {
+                        calcScreenTop.textContent = "ERROR"
+                    }
+    
+                    calcScreenBottom.textContent = ""
                 }
-
-                try {
-                    calcScreenTop.textContent += Algorithm.getFormattedEquationStr(`${bottomText} ${char} `)
-                } catch {
-                    calcScreenTop.textContent = "ERROR!"
-                }
-
-                calcScreenBottom.textContent = ""
             }
             break;
         case "+/-":
@@ -163,7 +184,7 @@ const processBtnPress = (btn, simulated) => {
                     try {
                         calcScreenBottom.textContent = Algorithm.getFormattedEquationStr(str);
                     } catch {
-                        calcScreenBottom.textContent = "ERROR!"
+                        calcScreenBottom.textContent = "ERROR"
                     }
                 }
                 return;
@@ -215,7 +236,7 @@ const processBtnPress = (btn, simulated) => {
                 calcScreenTop.textContent = answer;
                 lastAnswer = answer;
             } catch {
-                calcScreenTop.textContent = "Error!";
+                calcScreenTop.textContent = "ERROR";
             }
             
             negationInsertionStr = "";
@@ -240,7 +261,6 @@ const processBtnPress = (btn, simulated) => {
 
     if (newStr) {
         try {
-            
             let formattedStr = Algorithm.getFormattedEquationStr(newStr);
 
             if (newStr.endsWith(".0")) {
@@ -252,8 +272,17 @@ const processBtnPress = (btn, simulated) => {
             calcScreenBottom.textContent = formattedStr;
             
         } catch {
-            calcScreenBottom.textContent = "Error!"
+            calcScreenBottom.textContent = "ERROR"
         }
+    }
+    updateParenthesesCounts();
+
+}
+
+const handleParentheses = (char) => {
+    switch (char) {
+        case "(":
+            break;
     }
 }
 
@@ -284,6 +313,7 @@ window.addEventListener("keydown", () => {
     if (btn && !event.repeat) { // fire once
         processBtnPress(btn, true);
     }
+    updateParenthesesCounts();
 })
 
 
