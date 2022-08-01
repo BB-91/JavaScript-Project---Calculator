@@ -79,7 +79,7 @@ btn-grid {
     grid-template-areas:
     "btn-min        btn-max         btn-abs         btn-neg"
     "btn-ceil       btn-floor       btn-round       btn-trunc"
-    "btn-sqrt       btn-cbrt        btn-pow         btn-fact"
+    "btn-sqrt       btn-cbrt        btn-pow         btn-answer"
     "btn-sin        btn-cos         btn-tan         btn-func"
     "btn-log        btn-sign        btn-open        btn-close"
     "btn-clear-all  btn-clear       btn-del         btn-divide"
@@ -122,7 +122,7 @@ $btn-suffixes: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'min', 'max', 'abs', 'neg', 'clear-all', 'clear', 'del',
                 'divide', 'multiply', 'subtract', 'add', 'sum', 'decimal',
                 'ceil', 'floor', 'round', 'trunc',
-                'sqrt', 'cbrt', 'pow', 'fact',
+                'sqrt', 'cbrt', 'pow', 'answer',
                 'sin', 'cos', 'tan', 'func',
                 'ain', 'acos', 'atan',
                 'sign', 'log', 'open', 'close',

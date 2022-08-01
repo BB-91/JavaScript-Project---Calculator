@@ -66,7 +66,7 @@ btn-grid {
   grid-template-columns: repeat(4, 1fr);
   gap: 5px;
   align-items: center;
-  grid-template-areas: "btn-min        btn-max         btn-abs         btn-neg" "btn-ceil       btn-floor       btn-round       btn-trunc" "btn-sqrt       btn-cbrt        btn-pow         btn-fact" "btn-sin        btn-cos         btn-tan         btn-func" "btn-log        btn-sign        btn-open        btn-close" "btn-clear-all  btn-clear       btn-del         btn-divide" "btn-7          btn-8           btn-9           btn-multiply" "btn-4          btn-5           btn-6           btn-subtract" "btn-1          btn-2           btn-3           btn-add" "btn-0          btn-0           btn-decimal     btn-sum";
+  grid-template-areas: "btn-min        btn-max         btn-abs         btn-neg" "btn-ceil       btn-floor       btn-round       btn-trunc" "btn-sqrt       btn-cbrt        btn-pow         btn-answer" "btn-sin        btn-cos         btn-tan         btn-func" "btn-log        btn-sign        btn-open        btn-close" "btn-clear-all  btn-clear       btn-del         btn-divide" "btn-7          btn-8           btn-9           btn-multiply" "btn-4          btn-5           btn-6           btn-subtract" "btn-1          btn-2           btn-3           btn-add" "btn-0          btn-0           btn-decimal     btn-sum";
 }
 
 calc-btn {
@@ -215,8 +215,8 @@ calc-btn-text {
   grid-area: btn-pow;
 }
 
-#btn-fact {
-  grid-area: btn-fact;
+#btn-answer {
+  grid-area: btn-answer;
 }
 
 #btn-sin {

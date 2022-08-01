@@ -3,8 +3,23 @@ import * as Algorithm from './lib/algorithm.js';
 const calcScreenTop = document.querySelector("calc-screen-top");
 const calcScreenBottom = document.querySelector("calc-screen-bottom");
 let negationInsertionStr = "";
+let lastAnswer = "";
 
-const BtnDict = {
+let currentBtnLayerIndex = 0;
+let layeredBtns = [ // assigned in setup()
+    // sinBtn
+    // cosBTn
+    // tanBtn
+    // logBtn
+];
+const layeredBtnsText = [
+    ["sin", "asin", "sinh"],
+    ["cos", "acos", "cosh"],
+    ["tan", "atan", "tanh"],
+    ["log", "log2", "log10"],
+];
+
+const BtnDict = { // populate DOM in setup()
 	'min': {suffix: 'min',},
 	'max': {suffix: 'max',},
 	'abs': {suffix: 'abs',},
@@ -16,7 +31,8 @@ const BtnDict = {
 	'√': {suffix: 'sqrt',},
 	'∛': {suffix: 'cbrt',},
 	'^': {suffix: 'pow',},
-	'X!': {suffix: 'fact',},
+	// 'X!': {suffix: 'fact',},
+	'Ans': {suffix: 'answer',},
 	'AC': {suffix: 'clear-all',},
 	'C': {suffix: 'clear',},
 	'Del': {suffix: 'del',},
@@ -106,23 +122,23 @@ const processBtnPress = (btn, simulated) => {
             }
             break;
         case "+/-":
-            console.log("PRESSED NEGATE BUTTONS!")
+            // console.log("PRESSED NEGATE BUTTONS!")
             let temp = calcScreenBottom.textContent;
             if (negationInsertionStr && temp) {
-                console.log("inside if!")
+                // console.log("inside if!")
 
-                console.log(`negationInsertionStr: ${negationInsertionStr}`)
+                // console.log(`negationInsertionStr: ${negationInsertionStr}`)
 
                 const insertionIndex = temp.lastIndexOf(negationInsertionStr);
                 if (insertionIndex == -1) {
-                    console.log("early return 1!")
+                    // console.log("early return 1!")
                     return;
                 }
 
                 let arr = temp.split('');
 
-                console.log(`temp: ${temp}`)
-                console.log(`insertionIndex: ${insertionIndex}`)
+                // console.log(`temp: ${temp}`)
+                // console.log(`insertionIndex: ${insertionIndex}`)
                 const tempChars = temp.split('');
 
                 tempChars.forEach((char, index) => console.log(`${index}: ${char}`))
@@ -134,13 +150,13 @@ const processBtnPress = (btn, simulated) => {
 
                     negationInsertionStr = negationInsertionStr.slice(1);
 
-                    console.log("inside second if block!");
+                    // console.log("inside second if block!");
                     arr.splice(insertionIndex, 1);
                 } else {
-                    console.log("inside else!");
-                    console.log(`negationInsertionStr: ${negationInsertionStr}`);
-                    console.log(`temp: ${temp}`);
-                    console.log(`insertionIndex: ${insertionIndex}`);
+                    // console.log("inside else!");
+                    // console.log(`negationInsertionStr: ${negationInsertionStr}`);
+                    // console.log(`temp: ${temp}`);
+                    // console.log(`insertionIndex: ${insertionIndex}`);
                     arr.splice(Math.max(insertionIndex), 0, "-");
                     negationInsertionStr = "-" + negationInsertionStr;
                 }
@@ -156,7 +172,20 @@ const processBtnPress = (btn, simulated) => {
                 }
                 return;
             }
-
+            break;
+        case '√':
+            if (bottomText) {
+                str = `^(1/2)`;
+            }
+            break;
+        case '∛':
+            if (bottomText) {
+                str = `^(1/3)`;
+            }
+            break;
+        case "Ans":
+            str = lastAnswer;
+            break;
         case "AC":
             calcScreenTop.textContent = "";
             calcScreenBottom.textContent = "";
@@ -182,6 +211,16 @@ const processBtnPress = (btn, simulated) => {
             }
             break;
 
+        case "FUNC":
+            currentBtnLayerIndex = (currentBtnLayerIndex + 1) % 3
+            for (let i = 0; i < 4; i++) {
+                const layeredBtn = layeredBtns[i];
+                const newText = layeredBtnsText[i][currentBtnLayerIndex];
+                // const layeredBtn = layeredBtns[i][currentBtnLayerIndex];
+                // const newText = layeredBtnsText[i][currentBtnLayerIndex];
+                layeredBtn.textContent = newText;
+            }
+            break;
         case ".":
             str = calcScreenBottom.textContent.includes(".") ? "" : "."
             break;
@@ -192,12 +231,13 @@ const processBtnPress = (btn, simulated) => {
             try {
                 const answer = Algorithm.calc(formattedEquationStr);
                 calcScreenTop.textContent = answer;
-                console.log(`answer: ${answer}`);
+                lastAnswer = answer;
+                // console.log(`answer: ${answer}`);
             } catch {
                 calcScreenTop.textContent = "Error!";
             }
 
-            console.log(`formattedEquationStr: ${formattedEquationStr}`);
+            // console.log(`formattedEquationStr: ${formattedEquationStr}`);
             
             negationInsertionStr = "";
             calcScreenBottom.textContent = "";
@@ -212,15 +252,31 @@ const processBtnPress = (btn, simulated) => {
             }
     }
 
-    str = str.replaceAll("%", "/");
-    str = str.replaceAll("×", "*");
+    // str = str.replaceAll("%", "/");
+    // str = str.replaceAll("×", "*");
 
 
-    const newStr = calcScreenBottom.textContent + str;
-    console.log(`newStr: ${newStr}`)
+
+    let newStr = calcScreenBottom.textContent + str;
+
+    const startsWithDecimalPoint = newStr.startsWith(".");
+    if (newStr.startsWith(".")) {
+        newStr = "0." + newStr;
+    }
+
+    const endsWithDecimalPoint = newStr.endsWith(".");
+
+    // console.log(`newStr: ${newStr}`)
     if (newStr) {
         try {
-            calcScreenBottom.textContent = Algorithm.getFormattedEquationStr(newStr);
+            
+            let formattedStr = Algorithm.getFormattedEquationStr(newStr);
+            if (endsWithDecimalPoint) {
+                formattedStr += "."
+            }
+            // calcScreenBottom.textContent = Algorithm.getFormattedEquationStr(newStr);
+            calcScreenBottom.textContent = formattedStr;
+            
         } catch {
             calcScreenBottom.textContent = "Error!"
         }
@@ -230,7 +286,7 @@ const processBtnPress = (btn, simulated) => {
 
 const handleBtnClick = (event) => {
     const btn = event.target;
-    console.log(`clicked: ${btn.id}`)
+    // console.log(`clicked: ${btn.id}`)
     processBtnPress(btn, false);
 }
 
@@ -250,44 +306,57 @@ window.addEventListener("keyup", () => {
 })
 
 window.addEventListener("keydown", () => {
-    console.log(`event.key: ${event.key}`)
+    // console.log(`event.key: ${event.key}`)
     const btn = getBtnOrNullFromNumpadEvent(event);
     if (btn && !event.repeat) { // fire once
         processBtnPress(btn, true);
     }
 })
 
-Object.keys(BtnDict).forEach(key => {
-    const btnData = BtnDict[key];
-    const btn = document.createElement('calc-btn');
-    btnData.element = btn;
 
-    const suffix = btnData.suffix
-    btn.id = `btn-${suffix}`;
-    console.log(`btn.id: ${btn.id}`)
-    if (Algorithm.MATH_FUNC_NAMES.includes(suffix)){
-        btn.classList.add('func');
-    }
-    const btnTextHolder = document.createElement('calc-btn-text');
+const setup = () => {
+    Object.keys(BtnDict).forEach(key => {
+        const btnData = BtnDict[key];
+        const btn = document.createElement('calc-btn');
+        btnData.element = btn;
+    
+        const suffix = btnData.suffix
+        btn.id = `btn-${suffix}`;
+        // console.log(`btn.id: ${btn.id}`)
+        if (Algorithm.MATH_FUNC_NAMES.includes(suffix)){
+            btn.classList.add('func');
+        }
+        const btnTextHolder = document.createElement('calc-btn-text');
+    
+        btnTextHolder.textContent = key;
+        btn.appendChild(btnTextHolder)
+    
+        const btnGrid = document.querySelector('btn-grid');
+        btnGrid.appendChild(btn);
+        btn.addEventListener("click", handleBtnClick)
+    
+        layeredBtns = [BtnDict.sin.element,
+                        BtnDict.cos.element,
+                        BtnDict.tan.element,
+                        BtnDict.log.element
+                    ]
+        
+    })
+}
 
-    btnTextHolder.textContent = key;
-    btn.appendChild(btnTextHolder)
-
-    const btnGrid = document.querySelector('btn-grid');
-    btnGrid.appendChild(btn);
-    btn.addEventListener("click", handleBtnClick)
-})
-
-const DEBUG_STR = "2 * 4 + 3 - .3-4. - 5 - -3 ^ abs(---------5)"
-console.log(DEBUG_STR)
-const DEBUG_ANSWER = Algorithm.calc(DEBUG_STR);
-console.log(`DEBUG_ANSWER: ${DEBUG_ANSWER}`);
+setup();
 
 
-Object.keys(BtnDict).forEach(key => {
-    console.log(`btn-${key}`);
-})
+// const DEBUG_STR = "2 * 4 + 3 - .3-4. - 5 - -3 ^ abs(---------5)"
+// console.log(DEBUG_STR)
+// const DEBUG_ANSWER = Algorithm.calc(DEBUG_STR);
+// console.log(`DEBUG_ANSWER: ${DEBUG_ANSWER}`);
 
 
-console.log(`BtnDict:`)
-console.log(BtnDict)
+// Object.keys(BtnDict).forEach(key => {
+//     console.log(`btn-${key}`);
+// })
+
+
+// console.log(`BtnDict:`)
+// console.log(BtnDict)
