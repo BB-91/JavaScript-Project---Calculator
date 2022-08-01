@@ -2,6 +2,7 @@ import * as Algorithm from './lib/algorithm.js';
 
 const calcScreenTop = document.querySelector("calc-screen-top");
 const calcScreenBottom = document.querySelector("calc-screen-bottom");
+let negationInsertionStr = "";
 
 const BtnDict = {
 	'min': {suffix: 'min',},
@@ -58,53 +59,131 @@ const getLastTop = () => {
 }
 
 const processBtnPress = (btn, simulated) => {
+    const btnTextContent = btn.textContent;
+    const topText = calcScreenTop.textContent;
+    const bottomText = calcScreenBottom.textContent;
+    const topLast = getLastTop();
+
+    if (btn.textContent == "(") {
+        negationInsertionStr = "(";
+    }
+
+    else if (isNaN(negationInsertionStr) && !isNaN(btnTextContent)) {
+        negationInsertionStr = btnTextContent;
+    } else if (!isNaN(negationInsertionStr + btnTextContent)) {
+        negationInsertionStr += btnTextContent;
+    } else if (Algorithm.MATH_FUNC_NAMES.includes(btnTextContent)) {
+        negationInsertionStr = btnTextContent;
+    }
+
     let str = "";
 
     if (simulated) {
         btn.classList.add("simulated-click");
     }
 
-    const btnTextContent = btn.textContent;
-    const topText = calcScreenTop.textContent;
-    const bottomText = calcScreenBottom.textContent;
-    const topLast = getLastTop();
+    const displayOperators = ["*", "+", "-", "/"];
+
     switch (btnTextContent){
-        case "×":
         case "+":
         case "-":
+        case "×":
         case "%":
-            if (bottomText || (topText && !["×", "+", "-", "/"].includes(topLast))){
+            if (bottomText || (topText && !displayOperators.includes(topLast))){
                 const char = btnTextContent == "%" ? "/" :  btnTextContent;
-                calcScreenTop.textContent += `${bottomText} ${char} `
+
+                if (bottomText && !displayOperators.includes(topLast)) {
+                    calcScreenTop.textContent = "";
+                }
+
+                try {
+                    calcScreenTop.textContent += Algorithm.getFormattedEquationStr(`${bottomText} ${char} `)
+                } catch {
+                    calcScreenTop.textContent = "ERROR!"
+                }
+
                 calcScreenBottom.textContent = ""
             }
             break;
+        case "+/-":
+            console.log("PRESSED NEGATE BUTTONS!")
+            let temp = calcScreenBottom.textContent;
+            if (negationInsertionStr && temp) {
+                console.log("inside if!")
+
+                console.log(`negationInsertionStr: ${negationInsertionStr}`)
+
+                const insertionIndex = temp.lastIndexOf(negationInsertionStr);
+                if (insertionIndex == -1) {
+                    console.log("early return 1!")
+                    return;
+                }
+
+                let arr = temp.split('');
+
+                console.log(`temp: ${temp}`)
+                console.log(`insertionIndex: ${insertionIndex}`)
+                const tempChars = temp.split('');
+
+                tempChars.forEach((char, index) => console.log(`${index}: ${char}`))
+
+                if (temp.charAt(insertionIndex) == "-") {
+                    if (!negationInsertionStr.startsWith("-")) {
+                        throw new Error(`Expected negationInsertionStr to begin with negative sign: ${negationInsertionStr}`)
+                    }
+
+                    negationInsertionStr = negationInsertionStr.slice(1);
+
+                    console.log("inside second if block!");
+                    arr.splice(insertionIndex, 1);
+                } else {
+                    console.log("inside else!");
+                    console.log(`negationInsertionStr: ${negationInsertionStr}`);
+                    console.log(`temp: ${temp}`);
+                    console.log(`insertionIndex: ${insertionIndex}`);
+                    arr.splice(Math.max(insertionIndex), 0, "-");
+                    negationInsertionStr = "-" + negationInsertionStr;
+                }
+
+
+                str = arr.join('');
+                if (str) {
+                    try {
+                        calcScreenBottom.textContent = Algorithm.getFormattedEquationStr(str);
+                    } catch {
+                        calcScreenBottom.textContent = "ERROR!"
+                    }
+                }
+                return;
+            }
+
         case "AC":
             calcScreenTop.textContent = "";
             calcScreenBottom.textContent = "";
+            negationInsertionStr = "";
             break;
         case "C":
+            negationInsertionStr = "";
             calcScreenBottom.textContent = "";
             break;
         case ".":
             str = calcScreenBottom.textContent.includes(".") ? "" : "."
             break;
         case "=":
-            // TODO: CALCULATE AND UPDATE SCREEN
-            console.log("TODO: CALCULATE AND UPDATE SCREEN")
             const equationStr = calcScreenTop.textContent + calcScreenBottom.textContent;
             const formattedEquationStr = Algorithm.getFormattedEquationStr(equationStr);
-            const answer = Algorithm.calc(formattedEquationStr);
-            if (isNaN(answer)){
-                calcScreenBottom.textContent = "NaN";
-            } else {
-                calcScreenTop.textContent = answer;
-            }
             
-            // console.log(`calcScreenTop.textContent + calcScreenBottom.textContent: ${calcScreenTop.textContent + calcScreenBottom.textContent}`)
+            try {
+                const answer = Algorithm.calc(formattedEquationStr);
+                calcScreenTop.textContent = answer;
+            } catch {
+                calcScreenTop.textContent = "Error!";
+            }
+
             console.log(`formattedEquationStr: ${formattedEquationStr}`);
             console.log(`answer: ${answer}`);
             
+            negationInsertionStr = "";
             calcScreenBottom.textContent = "";
             break;
         case "0":
@@ -112,9 +191,24 @@ const processBtnPress = (btn, simulated) => {
             break;
         default:
             str = btnTextContent;
+            if (btn.classList.contains("func")){
+                str += "(";
+            }
     }
 
-    calcScreenBottom.textContent += str;
+    str = str.replaceAll("%", "/");
+    str = str.replaceAll("×", "*");
+
+
+    const newStr = calcScreenBottom.textContent + str;
+    if (newStr) {
+        try {
+            calcScreenBottom.textContent = Algorithm.getFormattedEquationStr(newStr);
+        } catch {
+            calcScreenBottom.textContent = "Error!"
+        }
+    }
+
 }
 
 const handleBtnClick = (event) => {
