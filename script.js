@@ -166,6 +166,22 @@ const processBtnPress = (btn, simulated) => {
             negationInsertionStr = "";
             calcScreenBottom.textContent = "";
             break;
+        case "Del":
+            const hasValidNegationIndex = () => negationInsertionStr && bottomText.indexOf(negationInsertionStr) != -1;
+            const hadValidNegationIndex = hasValidNegationIndex();
+
+            if (bottomText) {
+                calcScreenBottom.textContent = bottomText.slice(0, -1);
+            }
+
+            if (hadValidNegationIndex && !hasValidNegationIndex()) {
+                negationInsertionStr = negationInsertionStr.slice(0, -1);
+                if (!hasValidNegationIndex()) {
+                    throw new Error(`negationInsertionStr (${negationInsertionStr}) not found in calcScreenBottom.textContent: ${calcScreenBottom.textContent}`)
+                }
+            }
+            break;
+
         case ".":
             str = calcScreenBottom.textContent.includes(".") ? "" : "."
             break;
@@ -176,12 +192,12 @@ const processBtnPress = (btn, simulated) => {
             try {
                 const answer = Algorithm.calc(formattedEquationStr);
                 calcScreenTop.textContent = answer;
+                console.log(`answer: ${answer}`);
             } catch {
                 calcScreenTop.textContent = "Error!";
             }
 
             console.log(`formattedEquationStr: ${formattedEquationStr}`);
-            console.log(`answer: ${answer}`);
             
             negationInsertionStr = "";
             calcScreenBottom.textContent = "";
@@ -201,6 +217,7 @@ const processBtnPress = (btn, simulated) => {
 
 
     const newStr = calcScreenBottom.textContent + str;
+    console.log(`newStr: ${newStr}`)
     if (newStr) {
         try {
             calcScreenBottom.textContent = Algorithm.getFormattedEquationStr(newStr);
