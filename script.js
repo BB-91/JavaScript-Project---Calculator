@@ -7,10 +7,19 @@ let lastAnswer = "";
 
 let openingParenthesesCount = 0;
 let closingParenthesesCount = 0;
+let equalsBtn = null;
+let closingParenthesesBtn = null;
 
 const updateParenthesesCounts = () => {
     openingParenthesesCount = Algorithm.strCount(calcScreenBottom.textContent + calcScreenTop.textContent, "(");
     closingParenthesesCount = Algorithm.strCount(calcScreenBottom.textContent + calcScreenTop, ")");
+    if (openingParenthesesCount != closingParenthesesCount) {
+        equalsBtn.classList.add("disabled");
+        closingParenthesesBtn.classList.add("required");
+    } else {
+        equalsBtn.classList.remove("disabled");
+        closingParenthesesBtn.classList.remove("required");
+    }
 }
 
 let currentBtnLayerIndex = 0;
@@ -134,7 +143,6 @@ const processBtnPress = (btn, simulated) => {
         case "-":
         case "×":
         case "/":
-
             if (openingParenthesesCount > closingParenthesesCount) {
                 str = btnTextContent;
             } else {
@@ -215,7 +223,6 @@ const processBtnPress = (btn, simulated) => {
         case "Del":
             backspace();
             break;
-
         case "FUNC":
             currentBtnLayerIndex = (currentBtnLayerIndex + 1) % 3
             for (let i = 0; i < 4; i++) {
@@ -228,6 +235,10 @@ const processBtnPress = (btn, simulated) => {
             str = calcScreenBottom.textContent.includes(".") ? "" : "."
             break;
         case "=":
+            if (openingParenthesesCount != closingParenthesesCount) {
+                return;
+            }
+
             const equationStr = calcScreenTop.textContent + calcScreenBottom.textContent;
             const formattedEquationStr = Algorithm.getFormattedEquationStr(equationStr);
             
@@ -321,6 +332,16 @@ const setup = () => {
     Object.keys(BtnDict).forEach(key => {
         const btnData = BtnDict[key];
         const btn = document.createElement('calc-btn');
+        
+        switch (key) {
+            case "=":
+                equalsBtn = btn;
+                break;
+            case ")":
+                closingParenthesesBtn = btn;
+                break;
+        }
+
         btnData.element = btn;
     
         const suffix = btnData.suffix

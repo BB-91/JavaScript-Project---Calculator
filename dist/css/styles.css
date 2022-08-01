@@ -92,8 +92,8 @@ calc-btn {
   height: 100%;
 }
 
-calc-btn:active,
-calc-btn.simulated-click {
+calc-btn:active:not(.disabled),
+calc-btn.simulated-click:not(.disabled) {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 4px black;
   filter: brightness(80%);
@@ -101,6 +101,14 @@ calc-btn.simulated-click {
 
 calc-btn-text {
   pointer-events: none;
+}
+
+.disabled {
+  filter: brightness(40%);
+}
+
+.required {
+  color: red;
 }
 
 #btn-0 {
