@@ -24,31 +24,36 @@ const BtnDict = { // populate DOM in setup()
 	'max': {suffix: 'max',},
 	'abs': {suffix: 'abs',},
 	'+/-': {suffix: 'neg',},
+
 	'ceil': {suffix: 'ceil',},
 	'floor': {suffix: 'floor',},
 	'round': {suffix: 'round',},
 	'trunc': {suffix: 'trunc',},
+
 	'√': {suffix: 'sqrt',},
 	'∛': {suffix: 'cbrt',},
 	'^': {suffix: 'pow',},
 	'Ans': {suffix: 'answer',},
-	'AC': {suffix: 'clear-all',},
-	'C': {suffix: 'clear',},
-	'Del': {suffix: 'del',},
-	'sign': {suffix: 'sign',},
-	'log': {suffix: 'log',},
-	'(': {suffix: 'open',},
-	')': {suffix: 'close',},
-	'×': {suffix: 'multiply',},
-	'/': {suffix: 'divide',},
-	'+': {suffix: 'add',},
-	'-': {suffix: 'subtract',},
+
 	'sin': {suffix: 'sin',},
 	'cos': {suffix: 'cos',},
 	'tan': {suffix: 'tan',},
 	'FUNC': {suffix: 'func',},
-	'.': {suffix: 'decimal',},
-	'=': {suffix: 'sum',},
+
+	'log': {suffix: 'log',},
+	'sign': {suffix: 'sign',},
+	'(': {suffix: 'open',},
+	')': {suffix: 'close',},
+
+	'AC': {suffix: 'clear-all',},
+	'C': {suffix: 'clear',},
+	'Del': {suffix: 'del',},
+
+	'/': {suffix: 'divide',},
+	'×': {suffix: 'multiply',},
+	'-': {suffix: 'subtract',},
+	'+': {suffix: 'add',},
+
 	'0': {suffix: '0',},
 	'1': {suffix: '1',},
 	'2': {suffix: '2',},
@@ -59,6 +64,9 @@ const BtnDict = { // populate DOM in setup()
 	'7': {suffix: '7',},
 	'8': {suffix: '8',},
 	'9': {suffix: '9',},
+
+	'.': {suffix: 'decimal',},
+	'=': {suffix: 'sum',},
 }
 
 const getLastChar = (str) => {
