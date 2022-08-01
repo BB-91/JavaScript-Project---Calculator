@@ -50,8 +50,6 @@ const setIsAwaitingContentInParentheses = (bool) => {
     setEnabled(closingParenthesesBtn, !bool && !_isAwaitingRightOperand);
 }
 
-
-
 const updateParenthesesCounts = () => {
     openingParenthesesCount = Algorithm.strCount(calcScreenBottom.textContent + calcScreenTop.textContent, "(");
     closingParenthesesCount = Algorithm.strCount(calcScreenBottom.textContent + calcScreenTop, ")");
@@ -167,6 +165,7 @@ const processBtnPress = (btn, simulated) => {
 
     if (!isNaN(btnTextContent)) {
         setIsAwaitingRightOperand(false);
+        setIsAwaitingContentInParentheses(false);
     }
 
     if (_isAwaitingContentInParentheses
@@ -193,7 +192,8 @@ const processBtnPress = (btn, simulated) => {
         case "-":
         case "×":
         case "/":
-            if (!_isAwaitingRightOperand) {
+            // if (!_isAwaitingRightOperand) {
+            if (!_isAwaitingRightOperand && !_isAwaitingContentInParentheses) {
                 str = btnTextContent;
                 setIsAwaitingRightOperand(true);
                 setEnabled(equalsBtn, false);
