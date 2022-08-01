@@ -40,7 +40,7 @@ const BtnDict = { // populate DOM in setup()
 	'(': {suffix: 'open',},
 	')': {suffix: 'close',},
 	'×': {suffix: 'multiply',},
-	'%': {suffix: 'divide',},
+	'/': {suffix: 'divide',},
 	'+': {suffix: 'add',},
 	'-': {suffix: 'subtract',},
 	'sin': {suffix: 'sin',},
@@ -103,9 +103,9 @@ const processBtnPress = (btn, simulated) => {
         case "+":
         case "-":
         case "×":
-        case "%":
+        case "/":
             if (bottomText || (topText && !displayOperators.includes(topLast))){
-                const char = btnTextContent == "%" ? "/" :  btnTextContent;
+                const char = btnTextContent;
 
                 if (bottomText && !displayOperators.includes(topLast)) {
                     calcScreenTop.textContent = "";
@@ -259,7 +259,7 @@ const handleBtnClick = (event) => {
 
 const getBtnOrNullFromNumpadEvent = (event) => {
     if ( /([0-9\/\*\-\+\.]|Enter)/.test(event.key)){
-        const btnText = event.key.replace("/", "%").replace("*", "×").replace("Enter", "=");
+        const btnText = event.key.replace("*", "×").replace("Enter", "=");
         const btn = BtnDict[btnText].element;
         return btn;
     }
