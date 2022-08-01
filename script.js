@@ -248,7 +248,10 @@ const processBtnPress = (btn, simulated) => {
         try {
             
             let formattedStr = Algorithm.getFormattedEquationStr(newStr);
-            if (newStr.endsWith(".")) {
+
+            if (newStr.endsWith(".0")) {
+                formattedStr += ".0"
+            } else if (newStr.endsWith(".")) {
                 formattedStr += "."
             }
 
