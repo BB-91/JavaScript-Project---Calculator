@@ -262,7 +262,6 @@ const processBtnPress = (btn, simulated) => {
                 return;
             }
 
-            // const equationStr = calcScreenTop.textContent + calcScreenBottom.textContent;
             const equationStr = topText + bottomText;
             const formattedEquationStr = Algorithm.getFormattedEquationStr(equationStr);
             
@@ -278,9 +277,6 @@ const processBtnPress = (btn, simulated) => {
             negationInsertionStr = "";
             calcScreenBottom.textContent = "";
             break;
-        case "0":
-            str = bottomText ? "0" : "";
-            break;
         default:
             str = btnTextContent;
             if (btn.classList.contains("func")){
@@ -290,25 +286,27 @@ const processBtnPress = (btn, simulated) => {
 
     let newStr = calcScreenBottom.textContent + str;
 
-    const startsWithDecimalPoint = newStr.startsWith(".");
-    if (newStr.startsWith(".")) {
-        newStr = "0." + newStr;
-    }
-
     if (newStr) {
         try {
             let formattedStr = Algorithm.getFormattedEquationStr(newStr);
 
-            if (newStr.endsWith(".0")) {
-                formattedStr += ".0"
-            } else if (newStr.endsWith(".")) {
+            if (newStr.endsWith(".")) {
                 formattedStr += "."
             } else if (newStr.trim().endsWith("-")) {
                 formattedStr += " - "
+            } 
+
+            // string formatter removes trailing zeros
+            if (btnTextContent == "0") {
+                if (!bottomText) {
+                    calcScreenBottom.textContent = "0.";
+                } else {
+                    calcScreenBottom.textContent += "0";
+                }
+            } else {
+                calcScreenBottom.textContent = formattedStr;
             }
 
-            calcScreenBottom.textContent = formattedStr;
-            
         } catch(error) {
             calcScreenBottom.textContent = "ERROR";
             console.log(error);
