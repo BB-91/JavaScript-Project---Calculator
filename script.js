@@ -31,7 +31,6 @@ const BtnDict = { // populate DOM in setup()
 	'√': {suffix: 'sqrt',},
 	'∛': {suffix: 'cbrt',},
 	'^': {suffix: 'pow',},
-	// 'X!': {suffix: 'fact',},
 	'Ans': {suffix: 'answer',},
 	'AC': {suffix: 'clear-all',},
 	'C': {suffix: 'clear',},
@@ -122,26 +121,15 @@ const processBtnPress = (btn, simulated) => {
             }
             break;
         case "+/-":
-            // console.log("PRESSED NEGATE BUTTONS!")
             let temp = calcScreenBottom.textContent;
             if (negationInsertionStr && temp) {
-                // console.log("inside if!")
-
-                // console.log(`negationInsertionStr: ${negationInsertionStr}`)
-
                 const insertionIndex = temp.lastIndexOf(negationInsertionStr);
                 if (insertionIndex == -1) {
-                    // console.log("early return 1!")
                     return;
                 }
 
                 let arr = temp.split('');
-
-                // console.log(`temp: ${temp}`)
-                // console.log(`insertionIndex: ${insertionIndex}`)
                 const tempChars = temp.split('');
-
-                tempChars.forEach((char, index) => console.log(`${index}: ${char}`))
 
                 if (temp.charAt(insertionIndex) == "-") {
                     if (!negationInsertionStr.startsWith("-")) {
@@ -149,14 +137,8 @@ const processBtnPress = (btn, simulated) => {
                     }
 
                     negationInsertionStr = negationInsertionStr.slice(1);
-
-                    // console.log("inside second if block!");
                     arr.splice(insertionIndex, 1);
                 } else {
-                    // console.log("inside else!");
-                    // console.log(`negationInsertionStr: ${negationInsertionStr}`);
-                    // console.log(`temp: ${temp}`);
-                    // console.log(`insertionIndex: ${insertionIndex}`);
                     arr.splice(Math.max(insertionIndex), 0, "-");
                     negationInsertionStr = "-" + negationInsertionStr;
                 }
@@ -216,8 +198,6 @@ const processBtnPress = (btn, simulated) => {
             for (let i = 0; i < 4; i++) {
                 const layeredBtn = layeredBtns[i];
                 const newText = layeredBtnsText[i][currentBtnLayerIndex];
-                // const layeredBtn = layeredBtns[i][currentBtnLayerIndex];
-                // const newText = layeredBtnsText[i][currentBtnLayerIndex];
                 layeredBtn.textContent = newText;
             }
             break;
@@ -232,12 +212,9 @@ const processBtnPress = (btn, simulated) => {
                 const answer = Algorithm.calc(formattedEquationStr);
                 calcScreenTop.textContent = answer;
                 lastAnswer = answer;
-                // console.log(`answer: ${answer}`);
             } catch {
                 calcScreenTop.textContent = "Error!";
             }
-
-            // console.log(`formattedEquationStr: ${formattedEquationStr}`);
             
             negationInsertionStr = "";
             calcScreenBottom.textContent = "";
@@ -252,11 +229,6 @@ const processBtnPress = (btn, simulated) => {
             }
     }
 
-    // str = str.replaceAll("%", "/");
-    // str = str.replaceAll("×", "*");
-
-
-
     let newStr = calcScreenBottom.textContent + str;
 
     const startsWithDecimalPoint = newStr.startsWith(".");
@@ -264,29 +236,24 @@ const processBtnPress = (btn, simulated) => {
         newStr = "0." + newStr;
     }
 
-    const endsWithDecimalPoint = newStr.endsWith(".");
-
-    // console.log(`newStr: ${newStr}`)
     if (newStr) {
         try {
             
             let formattedStr = Algorithm.getFormattedEquationStr(newStr);
-            if (endsWithDecimalPoint) {
+            if (newStr.endsWith(".")) {
                 formattedStr += "."
             }
-            // calcScreenBottom.textContent = Algorithm.getFormattedEquationStr(newStr);
+
             calcScreenBottom.textContent = formattedStr;
             
         } catch {
             calcScreenBottom.textContent = "Error!"
         }
     }
-
 }
 
 const handleBtnClick = (event) => {
     const btn = event.target;
-    // console.log(`clicked: ${btn.id}`)
     processBtnPress(btn, false);
 }
 
@@ -306,7 +273,6 @@ window.addEventListener("keyup", () => {
 })
 
 window.addEventListener("keydown", () => {
-    // console.log(`event.key: ${event.key}`)
     const btn = getBtnOrNullFromNumpadEvent(event);
     if (btn && !event.repeat) { // fire once
         processBtnPress(btn, true);
@@ -322,7 +288,7 @@ const setup = () => {
     
         const suffix = btnData.suffix
         btn.id = `btn-${suffix}`;
-        // console.log(`btn.id: ${btn.id}`)
+
         if (Algorithm.MATH_FUNC_NAMES.includes(suffix)){
             btn.classList.add('func');
         }
@@ -345,18 +311,3 @@ const setup = () => {
 }
 
 setup();
-
-
-// const DEBUG_STR = "2 * 4 + 3 - .3-4. - 5 - -3 ^ abs(---------5)"
-// console.log(DEBUG_STR)
-// const DEBUG_ANSWER = Algorithm.calc(DEBUG_STR);
-// console.log(`DEBUG_ANSWER: ${DEBUG_ANSWER}`);
-
-
-// Object.keys(BtnDict).forEach(key => {
-//     console.log(`btn-${key}`);
-// })
-
-
-// console.log(`BtnDict:`)
-// console.log(BtnDict)
