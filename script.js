@@ -17,6 +17,21 @@ const setRequired = (element, bool) => {
     else {element.classList.remove("required");}
 }
 
+const getLastNumStr = () => {
+    let lastNumChars = [];
+    const bottomText = calcScreenBottom.textContent;
+    for (let i = bottomText.length - 1; i >= 0; i--) {
+        const char = bottomText.charAt(i);
+        if (/[\-\.0-9]/g.test(char)) {
+            lastNumChars.unshift(char);
+        } else {
+            break;
+        }
+    }
+    return lastNumChars.join('');
+}
+
+
 let openingParenthesesCount = 0;
 let closingParenthesesCount = 0;
 let equalsBtn = null;
@@ -182,7 +197,6 @@ const processBtnPress = (btn, simulated) => {
                 str = btnTextContent;
                 setIsAwaitingRightOperand(true);
                 setEnabled(equalsBtn, false);
-                console.log("equals should be disabled here.")
             }
             break;
         case "+/-":
@@ -255,7 +269,14 @@ const processBtnPress = (btn, simulated) => {
             }
             break;
         case ".":
-            str = calcScreenBottom.textContent.includes(".") ? "" : "."
+            const lastNumStr = getLastNumStr();
+            if (!lastNumStr) {
+                str = "0.";
+            } else if (lastNumStr.includes(".")) {
+                str = "";
+            } else {
+                str = ".";
+            }
             break;
         case "=":
             if (openingParenthesesCount != closingParenthesesCount) {
@@ -313,7 +334,6 @@ const processBtnPress = (btn, simulated) => {
         }
     }
     updateParenthesesCounts();
-
 }
 
 const handleParentheses = (char) => {
