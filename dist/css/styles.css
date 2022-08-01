@@ -26,7 +26,7 @@ calc-frame {
   display: flex;
   flex-direction: column;
   width: clamp(274px, 80vw, 500px);
-  height: clamp(280px, 90vw, 80vh);
+  height: auto;
   background-color: var(--color1);
   margin: 0 auto;
   padding: 10px;
@@ -54,6 +54,7 @@ calc-screen-bottom {
   padding: 4px;
   text-overflow: clip;
   overflow: hidden;
+  min-height: 45px;
 }
 
 btn-grid {
@@ -65,11 +66,14 @@ btn-grid {
   grid-template-columns: repeat(4, 1fr);
   gap: 5px;
   align-items: center;
-  grid-template-areas: "btn-min        btn-max         btn-abs         btn-neg" "btn-ceil       btn-floor       btn-round       btn-trunc" "btn-sqrt       btn-cbrt        btn-pow         btn-fact" "btn-sin        btn-cos         btn-tan         btn-func" "btn-log        btn-sign        btn-open        btn-close" "btn-clear-all  btn-clear       btn-back        btn-divide" "btn-7          btn-8           btn-9           btn-multiply" "btn-4          btn-5           btn-6           btn-subtract" "btn-1          btn-2           btn-3           btn-add" "btn-0          btn-0           btn-decimal     btn-sum";
+  grid-template-areas: "btn-min        btn-max         btn-abs         btn-neg" "btn-ceil       btn-floor       btn-round       btn-trunc" "btn-sqrt       btn-cbrt        btn-pow         btn-fact" "btn-sin        btn-cos         btn-tan         btn-func" "btn-log        btn-sign        btn-open        btn-close" "btn-clear-all  btn-clear       btn-del         btn-divide" "btn-7          btn-8           btn-9           btn-multiply" "btn-4          btn-5           btn-6           btn-subtract" "btn-1          btn-2           btn-3           btn-add" "btn-0          btn-0           btn-decimal     btn-sum";
 }
 
 calc-btn {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: var(--color2);
   padding: 5px 0;
   color: white;
@@ -85,6 +89,10 @@ calc-btn.simulated-click {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 4px black;
   filter: brightness(80%);
+}
+
+calc-btn-text {
+  pointer-events: none;
 }
 
 #btn-0 {
@@ -151,8 +159,8 @@ calc-btn.simulated-click {
   grid-area: btn-clear;
 }
 
-#btn-back {
-  grid-area: btn-back;
+#btn-del {
+  grid-area: btn-del;
 }
 
 #btn-divide {

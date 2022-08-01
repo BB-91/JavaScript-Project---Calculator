@@ -7,6 +7,7 @@
     <title>Calculator</title>
     <link rel="stylesheet" href="./dist/css/styles.css">
     <script src="./script.js" type="module" defer></script>
+
 </head>
 <body>
     <calc-frame>
@@ -14,58 +15,7 @@
             <calc-screen-top></calc-screen-top>
             <calc-screen-bottom></calc-screen-bottom>
         </calc-screen>
-        <btn-grid>
-
-            <calc-btn id="btn-min" class="func">min</calc-btn>
-            <calc-btn id="btn-max" class="func">max</calc-btn>
-            <calc-btn id="btn-abs" class="func">abs</calc-btn>
-            <calc-btn id="btn-neg" class="func">+/-</calc-btn>
-
-            <calc-btn id="btn-ceil" class="func">ceil</calc-btn>
-            <calc-btn id="btn-floor" class="func">floor</calc-btn>
-            <calc-btn id="btn-round" class="func">round</calc-btn>
-            <calc-btn id="btn-trunc" class="func">trunc</calc-btn>
-
-            <calc-btn id="btn-sqrt" class="func">√</calc-btn>
-            <calc-btn id="btn-cbrt" class="func">∛</calc-btn>
-            <calc-btn id="btn-pow" class="func">^</calc-btn>
-            <calc-btn id="btn-fact" class="func">X!</calc-btn>
-
-            <calc-btn id="btn-clear-all">AC</calc-btn>
-            <calc-btn id="btn-clear">C</calc-btn>
-            <calc-btn id="btn-back">Del</calc-btn>
-            <calc-btn id="btn-divide">%</calc-btn>
-    
-            <calc-btn id="btn-sign" class="func">sign</calc-btn>
-            <calc-btn id="btn-log" class="func">log</calc-btn>
-            <calc-btn id="btn-open">(</calc-btn>
-            <calc-btn id="btn-close">)</calc-btn>
-
-            <calc-btn id="btn-7">7</calc-btn>
-            <calc-btn id="btn-8">8</calc-btn>
-            <calc-btn id="btn-9">9</calc-btn>
-            <calc-btn id="btn-multiply">×</calc-btn>
-    
-            <calc-btn id="btn-4">4</calc-btn>
-            <calc-btn id="btn-5">5</calc-btn>
-            <calc-btn id="btn-6">6</calc-btn>
-            <calc-btn id="btn-subtract">-</calc-btn>
-    
-            <calc-btn id="btn-1">1</calc-btn>
-            <calc-btn id="btn-2">2</calc-btn>
-            <calc-btn id="btn-3">3</calc-btn>
-            <calc-btn id="btn-add">+</calc-btn>
-
-            <calc-btn id="btn-sin" class="func">sin</calc-btn>
-            <calc-btn id="btn-cos" class="func">cos</calc-btn>
-            <calc-btn id="btn-tan" class="func">tan</calc-btn>
-
-            <calc-btn id="btn-func" class="func">FUNC</calc-btn>
-
-            <calc-btn id="btn-0">0</calc-btn>
-            <calc-btn id="btn-decimal">.</calc-btn>
-            <calc-btn id="btn-sum">=</calc-btn>
-        </btn-grid>
+        <btn-grid></btn-grid>
     </calc-frame>
 </body>
 </html>
