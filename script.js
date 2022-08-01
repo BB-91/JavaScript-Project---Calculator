@@ -20,8 +20,6 @@ const layeredBtnsText = [
 ];
 
 const BtnDict = { // populate DOM in setup()
-	'min': {suffix: 'min',},
-	'max': {suffix: 'max',},
 	'abs': {suffix: 'abs',},
 	'+/-': {suffix: 'neg',},
 
