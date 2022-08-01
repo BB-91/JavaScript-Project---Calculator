@@ -121,7 +121,8 @@ calc-btn-text {
 }
 
 .disabled {
-    filter: brightness(40%);
+    filter: brightness(60%);
+    pointer-events: none;
 }
 
 .required {

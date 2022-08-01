@@ -5,22 +5,46 @@ const calcScreenBottom = document.querySelector("calc-screen-bottom");
 let negationInsertionStr = "";
 let lastAnswer = "";
 
+const setEnabled = (element, bool) => {
+    if (!element) {throw new Error(`Element is null`);}
+    if (bool) {element.classList.remove("disabled");}
+    else {element.classList.add("disabled");}
+}
+
+const setRequired = (element, bool) => {
+    if (!element) {throw new Error(`Element is null`);}
+    if (bool) {element.classList.add("required");}
+    else {element.classList.remove("required");}
+}
+
 let openingParenthesesCount = 0;
 let closingParenthesesCount = 0;
 let equalsBtn = null;
 let closingParenthesesBtn = null;
+let _isAwaitingRightOperand = false;
+const setIsAwaitingRightOperand = (bool) => {
+    if (typeof bool != "boolean") {throw new Error(`Not a boolean: ${bool}`);}
+    _isAwaitingRightOperand = bool;
+    setEnabled(closingParenthesesBtn, !bool && (openingParenthesesCount > closingParenthesesCount));
+}
+
+let _isAwaitingContentInParentheses = false;
+const setIsAwaitingContentInParentheses = (bool) => {
+    if (typeof bool != "boolean") {throw new Error(`Not a boolean: ${bool}`);}
+    _isAwaitingContentInParentheses = bool;
+    setEnabled(closingParenthesesBtn, !bool && !_isAwaitingRightOperand);
+}
+
+
 
 const updateParenthesesCounts = () => {
     openingParenthesesCount = Algorithm.strCount(calcScreenBottom.textContent + calcScreenTop.textContent, "(");
     closingParenthesesCount = Algorithm.strCount(calcScreenBottom.textContent + calcScreenTop, ")");
-    if (openingParenthesesCount != closingParenthesesCount) {
-        equalsBtn.classList.add("disabled");
-        closingParenthesesBtn.classList.add("required");
-    } else {
-        equalsBtn.classList.remove("disabled");
-        closingParenthesesBtn.classList.remove("required");
-    }
+    const hasMatchingParentheses = openingParenthesesCount == closingParenthesesCount;
+    setEnabled(equalsBtn, hasMatchingParentheses && !_isAwaitingRightOperand);
+    setRequired(closingParenthesesBtn, !hasMatchingParentheses);
 }
+
 
 let currentBtnLayerIndex = 0;
 let layeredBtns = [ // assigned in setup()
@@ -108,13 +132,11 @@ const processBtnPress = (btn, simulated) => {
     const btnTextContent = btn.textContent;
     const topText = calcScreenTop.textContent;
     const bottomText = calcScreenBottom.textContent;
-    const topLast = getLastTop();
+    // const topLast = getLastTop();
 
     if (btn.textContent == "(") {
         negationInsertionStr = "(";
-    }
-
-    else if (isNaN(negationInsertionStr) && !isNaN(btnTextContent)) {
+    } else if (isNaN(negationInsertionStr) && !isNaN(btnTextContent)) {
         negationInsertionStr = btnTextContent;
     } else if (!isNaN(negationInsertionStr + btnTextContent)) {
         negationInsertionStr += btnTextContent;
@@ -128,13 +150,26 @@ const processBtnPress = (btn, simulated) => {
         btn.classList.add("simulated-click");
     }
 
-    const displayOperators = ["*", "+", "-", "/"];
+    if (!isNaN(btnTextContent)) {
+        setIsAwaitingRightOperand(false);
+    }
+
+    if (_isAwaitingContentInParentheses
+            && (Algorithm.MATH_FUNC_NAMES.includes(btnTextContent) || !isNaN(btnTextContent))
+                && !bottomText.trim().endsWith("(")){
+        setIsAwaitingContentInParentheses(false);
+    }
 
     switch (btnTextContent){
         case "(":
+            setIsAwaitingContentInParentheses(true);
             str = "(";
             break;
         case ")":
+            if (_isAwaitingRightOperand) {
+                return;
+            }
+
             if (openingParenthesesCount > closingParenthesesCount) {
                 str = ")";
             }
@@ -143,25 +178,11 @@ const processBtnPress = (btn, simulated) => {
         case "-":
         case "×":
         case "/":
-            if (openingParenthesesCount > closingParenthesesCount) {
+            if (!_isAwaitingRightOperand) {
                 str = btnTextContent;
-            } else {
-                if (bottomText || (topText && !displayOperators.includes(topLast))){
-                    const char = btnTextContent;
-    
-                    if (bottomText && !displayOperators.includes(topLast)) {
-                        calcScreenTop.textContent = "";
-                    }
-    
-                    try {
-                        calcScreenTop.textContent += Algorithm.getFormattedEquationStr(`${bottomText} ${char} `)
-                    } catch(error) {
-                        calcScreenTop.textContent = "ERROR"
-                        console.log(error);
-                    }
-    
-                    calcScreenBottom.textContent = ""
-                }
+                setIsAwaitingRightOperand(true);
+                setEnabled(equalsBtn, false);
+                console.log("equals should be disabled here.")
             }
             break;
         case "+/-":
@@ -241,7 +262,8 @@ const processBtnPress = (btn, simulated) => {
                 return;
             }
 
-            const equationStr = calcScreenTop.textContent + calcScreenBottom.textContent;
+            // const equationStr = calcScreenTop.textContent + calcScreenBottom.textContent;
+            const equationStr = topText + bottomText;
             const formattedEquationStr = Algorithm.getFormattedEquationStr(equationStr);
             
             try {
@@ -281,6 +303,8 @@ const processBtnPress = (btn, simulated) => {
                 formattedStr += ".0"
             } else if (newStr.endsWith(".")) {
                 formattedStr += "."
+            } else if (newStr.trim().endsWith("-")) {
+                formattedStr += " - "
             }
 
             calcScreenBottom.textContent = formattedStr;
