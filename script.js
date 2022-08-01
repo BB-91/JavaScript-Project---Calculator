@@ -81,6 +81,14 @@ const getLastTop = () => {
     return getLastChar(calcScreenTop.textContent.trim());
 }
 
+const backspace = () => {
+    const bottomText = calcScreenBottom.textContent;
+    if (bottomText) {
+        calcScreenBottom.textContent = bottomText.slice(0, -1);
+        negationInsertionStr = negationInsertionStr.slice(0, -1);
+    }
+}
+
 const processBtnPress = (btn, simulated) => {
     const btnTextContent = btn.textContent;
     const topText = calcScreenTop.textContent;
@@ -186,19 +194,7 @@ const processBtnPress = (btn, simulated) => {
             calcScreenBottom.textContent = "";
             break;
         case "Del":
-            const hasValidNegationIndex = () => negationInsertionStr && bottomText.indexOf(negationInsertionStr) != -1;
-            const hadValidNegationIndex = hasValidNegationIndex();
-
-            if (bottomText) {
-                calcScreenBottom.textContent = bottomText.slice(0, -1);
-            }
-
-            if (hadValidNegationIndex && !hasValidNegationIndex()) {
-                negationInsertionStr = negationInsertionStr.slice(0, -1);
-                if (!hasValidNegationIndex()) {
-                    throw new Error(`negationInsertionStr (${negationInsertionStr}) not found in calcScreenBottom.textContent: ${calcScreenBottom.textContent}`)
-                }
-            }
+            backspace();
             break;
 
         case "FUNC":
@@ -268,23 +264,25 @@ const handleBtnClick = (event) => {
     processBtnPress(btn, false);
 }
 
-const getBtnOrNullFromNumpadEvent = (event) => {
-    if ( /([0-9\/\*\-\+\.]|Enter)/.test(event.key)){
+const getBtnOrNullFromNumpadEvent = (event, isKeyDown) => {
+    if ( /([0-9\/\*\-\+\.\^\)\()]|Enter)/.test(event.key) ){
         const btnText = event.key.replace("*", "×").replace("Enter", "=");
         const btn = BtnDict[btnText].element;
         return btn;
+    } else if (isKeyDown && event.key == "Backspace" && !event.repeat){
+        backspace();
     }
 }
 
 window.addEventListener("keyup", () => {
-    const btn = getBtnOrNullFromNumpadEvent(event);
+    const btn = getBtnOrNullFromNumpadEvent(event, false);
     if (btn) {
         btn.classList.remove("simulated-click");
     }
 })
 
 window.addEventListener("keydown", () => {
-    const btn = getBtnOrNullFromNumpadEvent(event);
+    const btn = getBtnOrNullFromNumpadEvent(event, true);
     if (btn && !event.repeat) { // fire once
         processBtnPress(btn, true);
     }
