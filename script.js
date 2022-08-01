@@ -155,8 +155,9 @@ const processBtnPress = (btn, simulated) => {
     
                     try {
                         calcScreenTop.textContent += Algorithm.getFormattedEquationStr(`${bottomText} ${char} `)
-                    } catch {
+                    } catch(error) {
                         calcScreenTop.textContent = "ERROR"
+                        console.log(error);
                     }
     
                     calcScreenBottom.textContent = ""
@@ -191,8 +192,9 @@ const processBtnPress = (btn, simulated) => {
                 if (str) {
                     try {
                         calcScreenBottom.textContent = Algorithm.getFormattedEquationStr(str);
-                    } catch {
-                        calcScreenBottom.textContent = "ERROR"
+                    } catch(error) {
+                        calcScreenBottom.textContent = "ERROR";
+                        console.log(error);
                     }
                 }
                 return;
@@ -246,8 +248,9 @@ const processBtnPress = (btn, simulated) => {
                 const answer = Algorithm.calc(formattedEquationStr);
                 calcScreenTop.textContent = answer;
                 lastAnswer = answer;
-            } catch {
+            } catch(error) {
                 calcScreenTop.textContent = "ERROR";
+                console.log(error);
             }
             
             negationInsertionStr = "";
@@ -282,8 +285,9 @@ const processBtnPress = (btn, simulated) => {
 
             calcScreenBottom.textContent = formattedStr;
             
-        } catch {
-            calcScreenBottom.textContent = "ERROR"
+        } catch(error) {
+            calcScreenBottom.textContent = "ERROR";
+            console.log(error);
         }
     }
     updateParenthesesCounts();
