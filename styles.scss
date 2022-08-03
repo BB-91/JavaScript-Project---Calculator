@@ -66,6 +66,7 @@ calc-screen-bottom {
     padding: 4px;
     text-overflow: clip;
     overflow: hidden;
+    direction: rtl; // overflow to the left
     min-height: 45px;
 }
 
