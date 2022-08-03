@@ -191,6 +191,7 @@ const processBtnPress = (btn, simulated) => {
         case "-":
         case "×":
         case "/":
+        case "^":
             if (!_isAwaitingRightOperand && !_isAwaitingContentInParentheses) {
                 str = btnTextContent;
                 setIsAwaitingRightOperand(true);
