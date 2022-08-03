@@ -36,25 +36,33 @@ let openingParenthesesCount = 0;
 let closingParenthesesCount = 0;
 let equalsBtn = null;
 let closingParenthesesBtn = null;
-let _isAwaitingRightOperand = false;
-const setIsAwaitingRightOperand = (bool) => {
-    if (typeof bool != "boolean") {throw new Error(`Not a boolean: ${bool}`);}
-    _isAwaitingRightOperand = bool;
-    setEnabled(closingParenthesesBtn, !bool && (openingParenthesesCount > closingParenthesesCount));
+
+class State {
+    #isAwaitingRightOperand = false;
+    #isAwaitingContentInParentheses = false;
+
+    get getIsAwaitingRightOperand() {return this.#isAwaitingRightOperand;}
+    set setIsAwaitingRightOperand(bool) {
+        if (typeof bool != "boolean"){throw new Error(`Not a boolean: ${bool}`);}
+        this.#isAwaitingRightOperand = bool;
+        setEnabled(closingParenthesesBtn, !bool && (openingParenthesesCount > closingParenthesesCount));
+    }
+
+    get getIsAwaitingContentInParentheses() {return this.#isAwaitingContentInParentheses;}
+    set setIsAwaitingContentInParentheses(bool) {
+        if (typeof bool != "boolean"){throw new Error(`Not a boolean: ${bool}`);}
+        this.#isAwaitingContentInParentheses = bool;
+        setEnabled(closingParenthesesBtn, !bool && !this.#isAwaitingRightOperand);
+    }
 }
 
-let _isAwaitingContentInParentheses = false;
-const setIsAwaitingContentInParentheses = (bool) => {
-    if (typeof bool != "boolean") {throw new Error(`Not a boolean: ${bool}`);}
-    _isAwaitingContentInParentheses = bool;
-    setEnabled(closingParenthesesBtn, !bool && !_isAwaitingRightOperand);
-}
+const state = new State();
 
 const updateParenthesesCounts = () => {
     openingParenthesesCount = Algorithm.strCount(calcScreenBottom.textContent + calcScreenTop.textContent, "(");
     closingParenthesesCount = Algorithm.strCount(calcScreenBottom.textContent + calcScreenTop, ")");
     const hasMatchingParentheses = openingParenthesesCount == closingParenthesesCount;
-    setEnabled(equalsBtn, hasMatchingParentheses && !_isAwaitingRightOperand);
+    setEnabled(equalsBtn, hasMatchingParentheses && !state.getIsAwaitingRightOperand);
     setRequired(closingParenthesesBtn, !hasMatchingParentheses);
 }
 
@@ -163,23 +171,24 @@ const processBtnPress = (btn, simulated) => {
     }
 
     if (!isNaN(btnTextContent)) {
-        setIsAwaitingRightOperand(false);
-        setIsAwaitingContentInParentheses(false);
+        state.setIsAwaitingRightOperand = false;
+        state.setIsAwaitingContentInParentheses = false;
     }
 
-    if (_isAwaitingContentInParentheses
-            && (Algorithm.MATH_FUNC_NAMES.includes(btnTextContent) || !isNaN(btnTextContent))
-                && !bottomText.trim().endsWith("(")){
-        setIsAwaitingContentInParentheses(false);
+    if (state.getIsAwaitingContentInParentheses
+        && (Algorithm.MATH_FUNC_NAMES.includes(btnTextContent) || !isNaN(btnTextContent))
+            && !bottomText.trim().endsWith("(")
+        ){
+        state.setIsAwaitingContentInParentheses = false;
     }
 
     switch (btnTextContent){
         case "(":
-            setIsAwaitingContentInParentheses(true);
+            state.setIsAwaitingContentInParentheses = true;
             str = "(";
             break;
         case ")":
-            if (_isAwaitingRightOperand) {
+            if (state.getIsAwaitingRightOperand) {
                 return;
             }
 
@@ -192,11 +201,12 @@ const processBtnPress = (btn, simulated) => {
         case "×":
         case "/":
         case "^":
-            if (bottomText && !_isAwaitingRightOperand && !_isAwaitingContentInParentheses) {
+            if (bottomText && !state.getIsAwaitingRightOperand && !state.getIsAwaitingContentInParentheses) {
                 str = btnTextContent;
-                setIsAwaitingRightOperand(true);
+                state.setIsAwaitingRightOperand = true;
                 setEnabled(equalsBtn, false);
             }
+
             break;
         case "+/-":
             let temp = calcScreenBottom.textContent;
@@ -282,7 +292,6 @@ const processBtnPress = (btn, simulated) => {
                 return;
             }
 
-            // const equationStr = topText + bottomText;
             const equationStr = bottomText;
             const formattedEquationStr = Algorithm.getFormattedEquationStr(equationStr);
             
