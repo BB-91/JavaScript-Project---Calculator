@@ -38,8 +38,18 @@ let equalsBtn = null;
 let closingParenthesesBtn = null;
 
 class State {
+    #isAwaitingLeftOperand = true;
     #isAwaitingRightOperand = false;
     #isAwaitingContentInParentheses = false;
+
+    get getIsAwaitingLeftOperand() {return this.#isAwaitingLeftOperand;}
+    set setIsAwaitingLeftOperand(bool) {
+        if (typeof bool != "boolean"){throw new Error(`Not a boolean: ${bool}`);}
+        this.#isAwaitingLeftOperand = bool;
+        operatorBtns.forEach(operatorBtn => {
+            setEnabled(operatorBtn, !bool);
+        })
+    }
 
     get getIsAwaitingRightOperand() {return this.#isAwaitingRightOperand;}
     set setIsAwaitingRightOperand(bool) {
@@ -68,12 +78,11 @@ const updateParenthesesCounts = () => {
 
 
 let currentBtnLayerIndex = 0;
-let layeredBtns = [ // assigned in setup()
-    // sinBtn
-    // cosBTn
-    // tanBtn
-    // logBtn
-];
+
+// assigned in setup()
+let layeredBtns = []; // sinBtn, cosBTn, tanBtn, logBtn
+let operatorBtns = [] // +, -, *, /, ^
+
 const layeredBtnsText = [
     ["sin", "asin", "sinh"],
     ["cos", "acos", "cosh"],
@@ -173,6 +182,7 @@ const processBtnPress = (btn, simulated) => {
     if (!isNaN(btnTextContent)) {
         state.setIsAwaitingRightOperand = false;
         state.setIsAwaitingContentInParentheses = false;
+        state.setIsAwaitingLeftOperand = false;
     }
 
     if (state.getIsAwaitingContentInParentheses
@@ -185,6 +195,7 @@ const processBtnPress = (btn, simulated) => {
     switch (btnTextContent){
         case "(":
             state.setIsAwaitingContentInParentheses = true;
+            state.setIsAwaitingLeftOperand = true;
             str = "(";
             break;
         case ")":
@@ -217,7 +228,6 @@ const processBtnPress = (btn, simulated) => {
                 }
 
                 let arr = temp.split('');
-                const tempChars = temp.split('');
 
                 if (temp.charAt(insertionIndex) == "-") {
                     if (!negationInsertionStr.startsWith("-")) {
@@ -414,13 +424,24 @@ const setup = () => {
         btnGrid.appendChild(btn);
         btn.addEventListener("click", handleBtnClick)
     
-        layeredBtns = [BtnDict.sin.element,
-                        BtnDict.cos.element,
-                        BtnDict.tan.element,
-                        BtnDict.log.element
-                    ]
-        
+        layeredBtns = [
+            BtnDict.sin.element,
+            BtnDict.cos.element,
+            BtnDict.tan.element,
+            BtnDict.log.element,
+        ]
+
+        operatorBtns = [
+            BtnDict["+"].element,
+            BtnDict["-"].element,
+            BtnDict["×"].element,
+            BtnDict["/"].element,
+            BtnDict["^"].element,
+        ]
+
     })
+
+    state.setIsAwaitingLeftOperand = true;
 }
 
 setup();
