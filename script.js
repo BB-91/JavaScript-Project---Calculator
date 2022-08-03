@@ -80,8 +80,8 @@ const updateParenthesesCounts = () => {
 let currentBtnLayerIndex = 0;
 
 // assigned in setup()
-let layeredBtns = []; // sinBtn, cosBTn, tanBtn, logBtn
-let operatorBtns = [] // +, -, *, /, ^
+let layeredBtns = []; // [sinBtn, cosBTn, tanBtn, logBtn]
+let operatorBtns = [] // [+Btn, -Btn, *Btn, /Btn, ^Btn, =Btn]
 
 const layeredBtnsText = [
     ["sin", "asin", "sinh"],
@@ -437,6 +437,7 @@ const setup = () => {
             BtnDict["×"].element,
             BtnDict["/"].element,
             BtnDict["^"].element,
+            BtnDict["="].element,
         ]
 
     })
