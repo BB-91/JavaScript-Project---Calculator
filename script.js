@@ -192,7 +192,7 @@ const processBtnPress = (btn, simulated) => {
         case "×":
         case "/":
         case "^":
-            if (!_isAwaitingRightOperand && !_isAwaitingContentInParentheses) {
+            if (bottomText && !_isAwaitingRightOperand && !_isAwaitingContentInParentheses) {
                 str = btnTextContent;
                 setIsAwaitingRightOperand(true);
                 setEnabled(equalsBtn, false);
@@ -282,7 +282,8 @@ const processBtnPress = (btn, simulated) => {
                 return;
             }
 
-            const equationStr = topText + bottomText;
+            // const equationStr = topText + bottomText;
+            const equationStr = bottomText;
             const formattedEquationStr = Algorithm.getFormattedEquationStr(equationStr);
             
             try {
